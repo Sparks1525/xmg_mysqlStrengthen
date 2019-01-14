@@ -1,0 +1,29 @@
+1，创建一个新的数据库priv_test;
+create database priv_test;
+
+2，创建一个表user，包括id,name;
+use priv_test;
+create table user(id bigint(20) primary key auto_increment,name varchar(255));
+
+3，创建一个表book，包括id,isbn;
+create table book(id bigint(20) primary key auto_increment,isbn varchar(255));
+
+4，创建一个超级管理员boss,密码为520it，拥有所有权限，并能继续授予权限；
+grant ALL PRIVILEGES on *.* TO boss@localhost IDENTIFIED BY '520it' WITH GRANT OPTION;
+flush privileges;
+
+5，使用boss用户登录MySQL；
+exit
+mysql -uboss -p520it
+
+6，创建一个项目管理员privadmin，密码1234，拥有对priv_test库所有的权限；
+grant ALL PRIVILEGES on priv_test.* TO privadmin@localhost IDENTIFIED BY '1234' WITH GRANT OPTION;
+flush privileges;
+
+7，创建一个普通用户privuser,密码1234，能对priv_test数据库所有表做CRUD；
+grant insert,update,select,delete on priv_test.* TO privuser@localhost IDENTIFIED BY '1234' 
+flush privileges;
+
+8，创建一个HR用户privhr,密码1234，只能对user表进行CRUD；
+grant insert,update,select,delete on priv_test.user TO privhr@localhost IDENTIFIED BY '1234';
+flush privileges;
